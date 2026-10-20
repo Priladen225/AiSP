@@ -12,6 +12,30 @@ typedef struct osoba {
 	pozicija next;
 }Osoba;
 
+
+int trazi(Osoba* head,char *prezime) {
+	int counter = 1;
+	head = head->next;
+	while (strcmp(prezime, head->prezime) != 0) {
+		head = head->next;
+		counter += 1;
+	}
+	printf("\n osoba %s je na %d mjestu u listi", prezime, counter);
+	return counter;
+}
+
+int brisanje(Osoba* head, char* prezime) {
+	Osoba* temp;
+	temp = head->next;
+	while (strcmp(prezime, head->next->prezime) != 0) {
+		head = head->next;
+	}
+	temp= head->next;
+	head->next = temp->next;
+	free(temp);
+	return 0;
+}
+
 int IspisListe(Osoba* head) {
 	head = head->next;
 	while (head != NULL) {
@@ -56,7 +80,9 @@ void main() {
 	head->next = NULL;
 	DodajPocetak(head, "ante", "juric",2005 );
 	DodajPocetak(head, "jure", "antic", 2006);
-	IspisListe(head);
 	DodajKraj(head, "stipe", "klaric", 2004);
+	IspisListe(head);
+	trazi(head, "juric");
+	brisanje(head, "klaric");
 	IspisListe(head);
 }
