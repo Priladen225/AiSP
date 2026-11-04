@@ -90,6 +90,11 @@ void ispisListe(polinom* head) {
 	printf("je:\n%dx^%d", head->koef, head->eksp);
 	while (head->next != NULL) {
 		head = head->next;
+		
+		if (head->eksp == 0) {
+			printf("+%d", head->koef);
+			continue;
+		}
 		if (head->koef > 0) {
 			if (head->koef == 1)
 				printf("+x^%d", head->eksp);
