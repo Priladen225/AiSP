@@ -15,9 +15,13 @@ void dodajSort(lista* head, int broj) {
 	lista* temp = malloc(sizeof(lista));
 	temp->vrijednost = broj;
 	while (radni != NULL) {
-		if ((radni->vrijednost) >= broj) {
+		if ((radni->vrijednost) > broj) {
 			temp->next = radni;
 			pred->next = temp;
+			return;
+		}
+		else if(radni->vrijednost==broj){
+			free(temp);
 			return;
 		}
 		radni = radni->next;
