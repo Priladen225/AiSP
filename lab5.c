@@ -20,7 +20,7 @@ void dodajSort(lista* head, int broj) {
 			pred->next = temp;
 			return;
 		}
-		else if(radni->vrijednost==broj){
+		else if (radni->vrijednost == broj) {
 			free(temp);
 			return;
 		}
@@ -33,19 +33,21 @@ void dodajSort(lista* head, int broj) {
 	return;
 }
 
-void readF(lista* head, const char* filename) {
+int readF(lista* head, const char* filename) {
 	int eksp;
 	FILE* p;
 	p = fopen(filename, "r+");
-	if (p == NULL)
+	if (p == NULL) {
 		printf("NIJE OTVORIJA P FILE");
+		return -1;
+	}
 	while (fscanf(p, "%d ", &eksp) == 1) {
 		dodajSort(head, eksp);
 	}
 	fclose(p);
 
 
-	return;
+	return 0;
 }
 
 
@@ -67,7 +69,7 @@ void unosUnije(lista* glavni, lista* slabiji) {
 	return;
 }
 
-void unija(lista*glavni,lista*prvi,lista*drugi) {
+void unija(lista* glavni, lista* prvi, lista* drugi) {
 	unosUnije(glavni, prvi);
 	unosUnije(glavni, drugi);
 	return;
@@ -77,7 +79,7 @@ void unija(lista*glavni,lista*prvi,lista*drugi) {
 void presjek(lista* glavni, lista* prvi, lista* drugi) {
 	prvi = prvi->next;
 	drugi = drugi->next;
-	while (prvi->next!=NULL && drugi->next!=NULL) {
+	while (prvi != NULL && drugi != NULL) {
 		if (prvi->vrijednost == drugi->vrijednost) {
 			dodajSort(glavni, prvi->vrijednost);
 			prvi = prvi->next;
@@ -103,9 +105,13 @@ void main(void) {
 	Q_head->next = NULL;
 	lista* Z_head = malloc(sizeof(lista));
 	Z_head->next = NULL;
-	readF(p_head, "p.txt");
-	readF(n_head, "n.txt");
-	unija(Q_head,p_head,n_head);
+	if ((readF(p_head, "p.txt")) == -1) {
+		return -1;
+	}
+	if ((readF(n_head, "n.txt")) == -1) {
+		return -1;
+	}
+	unija(Q_head, p_head, n_head);
 	presjek(Z_head, n_head, p_head);
 
 
