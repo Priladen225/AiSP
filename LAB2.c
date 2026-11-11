@@ -24,9 +24,8 @@ int trazi(Osoba* head,char *prezime) {
 	return counter;
 }
 
-int brisanje(Osoba* head, char* prezime) {
+int brisanjeOsobe(Osoba* head, char* prezime) {
 	Osoba* temp;
-	temp = head->next;
 	while (strcmp(prezime, head->next->prezime) != 0) {
 		head = head->next;
 	}
@@ -48,6 +47,10 @@ int IspisListe(Osoba* head) {
 
 int DodajPocetak(Osoba* head, char * ime, char * prezime, int gRodjs) {
 	Osoba *p = malloc(sizeof(Osoba));
+	if (!p) {
+		printf("greska u alociranju");
+		return 1;
+	}
 	p->next = head->next;
 	head->next = p;
 	strcpy(p->ime, ime);
@@ -64,6 +67,10 @@ int DodajKraj(Osoba* head, char* ime, char* prezime, int gRodjs) {
 		head = head->next;
 	}
 	Osoba* p = malloc(sizeof(Osoba));
+	if (!p) {
+		printf("greska u alociranju");
+		return 1;
+	}
 	p->next = NULL;
 	head->next = p;
 	strcpy(p->ime, ime);
@@ -73,16 +80,34 @@ int DodajKraj(Osoba* head, char* ime, char* prezime, int gRodjs) {
 	return 0;
 }
 
+void brisanje(Osoba*head) {
+	Osoba* temp;
+	while (head) {
+		temp = head;
+		head = head->next;
+		free(temp);
+	}
+	return;
+}
 
 
-void main() {
+
+int main() {
 	Osoba* head = malloc(sizeof(Osoba));
 	head->next = NULL;
+	if (!head) {
+		printf("Nije alocira prostor");
+		return 1;
+	}
 	DodajPocetak(head, "ante", "juric",2005 );
 	DodajPocetak(head, "jure", "antic", 2006);
 	DodajKraj(head, "stipe", "klaric", 2004);
 	IspisListe(head);
 	trazi(head, "juric");
-	brisanje(head, "klaric");
+	brisanjeOsobe(head, "klaric");
 	IspisListe(head);
+	brisanje(head);
+	
+
+	return 0;
 }
