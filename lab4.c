@@ -20,7 +20,7 @@ int Dodaj_sort(polinom* head, int eksp,int koef) {
 		if ((radni->eksp) < eksp) {
 			temp->next = radni;
 			pred->next = temp;
-			return;
+			return 0;
 		}
 		else if ((radni->eksp) == eksp) {
 			radni->koef = (radni->koef) + koef;
@@ -29,7 +29,7 @@ int Dodaj_sort(polinom* head, int eksp,int koef) {
 				free(radni);
 			}
 			free(temp);
-			return;
+			return 0;
 		}
 		radni = radni->next;
 		pred = pred->next;
@@ -173,17 +173,17 @@ int main(void) {
 	}
 	P_head->next = NULL;
 	polinom* N_head = malloc(sizeof(polinom));
-	if (provjera(P_head)) {
+	if (provjera(N_head)) {
 		return 1;
 	}
 	N_head->next = NULL;
 	polinom* Z_head = malloc(sizeof(polinom));
-	if (provjera(P_head)) {
+	if (provjera(Z_head)) {
 		return 1;
 	}
 	Z_head->next = NULL;
 	polinom* Q_head = malloc(sizeof(polinom));
-	if (provjera(P_head)) {
+	if (provjera(Q_head)) {
 		return 1;
 	}
 	Q_head->next = NULL;
