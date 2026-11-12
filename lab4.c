@@ -10,7 +10,7 @@ struct polinom
 };
 typedef struct polinom polinom;
 
-void Dodaj_sort(polinom* head, int eksp,int koef) {
+int Dodaj_sort(polinom* head, int eksp,int koef) {
 	polinom *radni=head->next;
 	polinom* pred = head;
 	polinom* temp=malloc(sizeof(polinom));
@@ -36,89 +36,97 @@ void Dodaj_sort(polinom* head, int eksp,int koef) {
 	}
 	pred->next = temp;
 	temp->next = NULL;
-	return;
+	return 0;
 }
 
-void readpolyP(polinom *head) {
+int readpolyP(polinom *head) {
 	int eksp,koef;
 	FILE* p;
 	p = fopen("p.txt", "r+");
-	if (p == NULL)
+	if (p == NULL) {
 		printf("NIJE OTVORIJA P FILE");
+		return 1;
+	}
 	while (fscanf(p, "%d %d", &eksp, &koef) == 2) {
 		Dodaj_sort(head, eksp, koef);
 	}
 	fclose(p);
-	return ;
+	return 0;
 }
-void readpolyN(polinom* head) {
+int readpolyN(polinom* head) {
 	int eksp, koef;
 	FILE* p;
 	p = fopen("n.txt", "r+");
-	if (p == NULL)
+	if (p == NULL){
 		printf("NIJE OTVORIA N FILE");
+		return 1;
+}
 	while (fscanf(p, "%d %d", &eksp, &koef) == 2) {
 		Dodaj_sort(head, eksp, koef);
 	}
 	fclose(p);
-	return;
+	return 0;
 }
 
 void ispisListe(polinom* head) {
 	static int counter = 0;
+	int prvi = 1;
 	counter++;
 	switch (counter) {
 	case 1:
-		printf("Prvi polinom ");
+		printf("Prvi polinom je: ");
 		break;
 	case 2:
-		printf("Drugi polinom ");
+		printf("Drugi polinom je: ");
 		break;
 	case 3:
-		printf("Zbroj polinoma ");
+		printf("Zbroj polinoma je: ");
 		break;
 	case 4:
-		printf("Umnozak Polinoma ");
+		printf("Umnozak polinoma je: ");
 		break;
 	}
 	head = head->next;
-	if (head->koef == 1)
-		printf("je: x^%d", head->eksp);
-	else if(head->koef==-1)
-		printf("je: -x^%d", head->eksp);
-	else
-	printf("je:\n%dx^%d", head->koef, head->eksp);
-	while (head->next != NULL) {
-		head = head->next;
-		
-		if (head->eksp == 0) {
-			printf("+%d", head->koef);
-			continue;
+	if (head == NULL) {
+		printf("0\n");
+		return;
+	}
+	while (head != NULL) {
+		int k = head->koef;
+		int e = head->eksp;
+		int a = (k < 0) ? -k : k;
+
+		if (k < 0)
+			printf("-");
+		else if (!prvi)
+			printf("+");
+
+		if (e == 0) {
+			printf("%d", a);
 		}
-		if (head->koef > 0) {
-			if (head->koef == 1)
-				printf("+x^%d", head->eksp);
+		else {
+			if (a != 1)
+				printf("%d", a);
+			if (e == 1)
+				printf("x");
 			else
-				printf("+%dx^%d", head->koef, head->eksp);
+				printf("x^%d", e);
 		}
-		else if (head->koef == -1)
-			printf("-x^%d", head->eksp);
-		else
-			printf("%dx^%d", head->koef, head->eksp);;
+		prvi = 0;
+		head = head->next;
 	}
 	printf("\n");
-	return 0;
 }
 
-void ZbrojPolinoma(polinom*Z,polinom*p) {
+int ZbrojPolinoma(polinom*Z,polinom*p) {
 	while (p->next != NULL) {
 		p = p->next;
 		Dodaj_sort(Z, p->eksp, p->koef);
 	}
-	return;
+	return 0;
 }
 
-void MnozenjePolinoma(polinom* M,polinom*p,polinom*n) {
+int MnozenjePolinoma(polinom* M,polinom*p,polinom*n) {
 	int eksp=0;
 	int koef=0;
 	p = p->next;
@@ -134,26 +142,67 @@ void MnozenjePolinoma(polinom* M,polinom*p,polinom*n) {
 		n=temp;
 		p = p->next;
 	}
-	return;
+	return 0;
 }
 
-void main(void) {
+int oslobodiListu(polinom* head) {
+	polinom* trenutni = head;
+	polinom* sljedeci;
+	while (trenutni != NULL) {
+		sljedeci = trenutni->next;
+		free(trenutni);
+		trenutni = sljedeci;
+	}
+
+	return 0;
+}
+
+int provjera(polinom*head) {
+	if (!head) {
+		printf("prostor nije alociran");
+		return 1;
+	}
+	return 0;
+}
+
+
+int main(void) {
 	polinom* P_head = malloc(sizeof(polinom));
+	if (provjera(P_head)) {
+		return 1;
+	}
 	P_head->next = NULL;
 	polinom* N_head = malloc(sizeof(polinom));
+	if (provjera(P_head)) {
+		return 1;
+	}
 	N_head->next = NULL;
 	polinom* Z_head = malloc(sizeof(polinom));
+	if (provjera(P_head)) {
+		return 1;
+	}
 	Z_head->next = NULL;
 	polinom* Q_head = malloc(sizeof(polinom));
+	if (provjera(P_head)) {
+		return 1;
+	}
 	Q_head->next = NULL;
 	readpolyP(P_head);
 	readpolyN(N_head);
-	ispisListe(P_head);
-	ispisListe(N_head);
 	ZbrojPolinoma(Z_head, P_head);
 	ZbrojPolinoma(Z_head, N_head);
-	ispisListe(Z_head);
 	MnozenjePolinoma(Q_head, P_head, N_head);
+
+
+	ispisListe(P_head);
+	ispisListe(N_head);
+	ispisListe(Z_head);
 	ispisListe(Q_head);
+
+	oslobodiListu(P_head);
+	oslobodiListu(N_head);
+	oslobodiListu(Z_head);
+	oslobodiListu(Q_head);
+
 	return 0;
 }
